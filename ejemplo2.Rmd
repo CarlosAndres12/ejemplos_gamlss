@@ -1,0 +1,55 @@
+---
+title: "ejemplo2"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r}
+if (!require("gamlss")) install.packages("gamlss")
+```
+
+```{r}
+B0_MU <- 1
+B1_MU <- 0.015
+PARAM_SIGMA <- 0.3
+PARAM_SHAPE<- 2
+
+
+
+set.seed(122)
+x <- rgamma(1000, shape = PARAM_SHAPE)
+
+PARAM_MU <- exp(B0_MU + B1_MU*x)
+
+y <- rZAZIPF(1000, mu = PARAM_MU, sigma = PARAM_SIGMA)
+```
+
+
+
+```{r}
+model <- gamlss(y ~ x, family = ZAZIPF)
+# summary(model)
+```
+
+```{r}
+
+print(paste(c("b0:", "b1:"), round( model$mu.coefficients,3 ) ) )
+```
+
+
+```{r}
+print(paste("sigma:", round( plogis(model$sigma.coefficients),3 ) ) )
+```
+
+```{r}
+wp(model)
+```
+
+
+```{r}
+plot(model)
+```
+```{r}
+table(y)
+```

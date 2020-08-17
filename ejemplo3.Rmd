@@ -1,0 +1,33 @@
+---
+title: "ejemplo3"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r}
+if (!require("gamlss")) install.packages("gamlss")
+if (!require("gamlss.util")) install.packages("gamlss.util")
+```
+
+```{r}
+data("dbbmi")
+```
+
+```{r}
+
+m1 <- gamlss( bmi~pbz(age), sigma.formula = ~pbz(age),  data=dbbmi, family=GA )
+# summary(m1)
+```
+
+```{r}
+plotSimpleGamlss(bmi, age, model=m1,   data=dbbmi)
+```
+
+
+
+
+```{r}
+
+```
+

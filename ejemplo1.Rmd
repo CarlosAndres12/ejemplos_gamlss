@@ -1,0 +1,59 @@
+---
+title: "ejemplo1"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+if (!require("gamlss")) install.packages("gamlss")
+```
+
+```{r}
+PARAM_MU <- 3
+PARAM_SIGMA <- 0.5 
+
+set.seed(122)
+y <- rZAZIPF(10000, mu = PARAM_MU, sigma = PARAM_SIGMA)
+```
+
+```{r}
+estimation <- gamlssML(y, family=ZAZIPF)
+```
+
+```{r}
+print(paste("mu:", round(estimation$mu, 3)))
+print(paste("sigma:", round(estimation$sigma,3)) )
+```
+
+
+
+```{r}
+# Dataframe para la grafica
+
+if (!require("scales")) install.packages("scales")
+if (!require("tidyverse")) install.packages("tidyverse")
+if (!require("ggplot2")) install.packages("ggplot2")
+if (!require("latex2exp")) install.packages("latex2exp")
+
+bar_plot_df <- y %>%  table() %>% t() %>% data.frame()
+bar_plot_df[[1]] <- NULL
+colnames(bar_plot_df) <- c("y", "frecuencia")
+bar_plot_df$`Probabilidad` <- bar_plot_df$frecuencia/ sum(bar_plot_df$frecuencia)
+
+# grafica con ggplot2
+ggplot(data=bar_plot_df, aes(x=y, y=Probabilidad)) +
+  geom_bar(stat="identity", fill="steelblue")+  ylim(0, 0.6) +
+  scale_y_continuous(labels = percent) +
+  geom_text(aes(label= paste0((Probabilidad*100) %>% round(3),"%") ), vjust=-0.3, size=5, color="darkblue", fill="lightblue")+
+  theme_minimal() +
+  theme(axis.text=element_text(size=12),
+        axis.title=element_text(size=14))  + xlab("") +
+  ggtitle(TeX("$\\mu = 0.3 \\; \\sigma = 0.5$"))
+
+```
+

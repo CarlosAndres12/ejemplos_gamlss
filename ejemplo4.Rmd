@@ -1,0 +1,31 @@
+---
+title: "ejemplo4"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+if (!require("gamlss")) install.packages("gamlss")
+if (!require("gamlss.util")) install.packages("gamlss.util")
+if (!require("gamlss.add")) install.packages("gamlss.add")
+```
+```{r}
+data(film90)
+```
+
+
+```{r}
+m1 <- gamlss(lborev1~nn(~lboopen,size=20,decay=0.1), 
+              data=film90,family=NO)
+
+```
+
+```{r}
+plotSimpleGamlss(lborev1, lboopen, model=m1,   data=film90)
+```
+
